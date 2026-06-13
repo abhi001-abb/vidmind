@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VidMind — AI Video Summarizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<div class="app">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">◈</span>
+      <span class="logo-text">VidMind</span>
+    </div>
+    <div class="header-tag">AI Video Intelligence</div>
+  </header>
+
+  <!-- Main panel -->
+  <main class="main">
+
+    <!-- Input card -->
+    <section class="card input-card" id="inputCard">
+      <div class="card-label">// INPUT SOURCE</div>
+
+      <div class="input-tabs">
+        <button class="tab active" id="tabFile" onclick="switchTab('file')">
+          <span class="tab-icon">▲</span> Upload File
+        </button>
+        <button class="tab" id="tabYT" onclick="switchTab('youtube')">
+          <span class="tab-icon">▶</span> YouTube Link
+        </button>
+      </div>
+
+      <div class="input-zone" id="zoneFile">
+        <div class="drop-area" id="dropArea" onclick="document.getElementById('fileInput').click()">
+          <div class="drop-icon">⬡</div>
+          <div class="drop-text">Drop video file here or click to browse</div>
+          <div class="drop-sub">MP4 · MOV · AVI · MKV · WEBM — max 500MB</div>
+          <div class="file-name" id="fileName"></div>
+        </div>
+        <input type="file" id="fileInput" accept="video/*" hidden onchange="onFileSelect(this)">
+      </div>
+
+      <div class="input-zone hidden" id="zoneYT">
+        <div class="yt-input-wrap">
+          <span class="yt-prefix">▶</span>
+          <input type="text" class="yt-input" id="ytInput"
+            placeholder="https://youtube.com/watch?v=…"
+            oninput="onYTInput(this)">
+        </div>
+        <div class="yt-warning">
+          ⚠ YouTube may block downloads. Upload the video file for guaranteed results.
+        </div>
+      </div>
+      <div class="language-wrap">
+          <label for="outputLanguage" class="language-label">
+            Output Language
+          </label>
+          <select id="outputLanguage" class="language-select">
+            <option value="English" selected>English</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Telugu">Telugu</option>
+            <option value="Tamil">Tamil</option>
+            <option value="Kannada">Kannada</option>
+            <option value="Malayalam">Malayalam</option>
+            <option value="Spanish">Spanish</option>
+            <option value="French">French</option>
+            <option value="German">German</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Chinese">Chinese</option>
+          </select>
+        </div>
+      <button class="run-btn" id="runBtn" onclick="startProcessing()" disabled>
+        <span id="runBtnText">Generate Summary + Quiz</span>
+        <span class="run-arrow">→</span>
+      </button>
+    </section>
+
+    <!-- Progress card (hidden until processing) -->
+    <section class="card progress-card hidden" id="progressCard">
+      <div class="card-label">// PROCESSING</div>
+      <div class="steps" id="stepsList">
+        <div class="step pending" id="step-download">
+          <span class="step-dot"></span>
+          <span class="step-label">Download video</span>
+        </div>
+        <div class="step pending" id="step-audio">
+          <span class="step-dot"></span>
+          <span class="step-label">Extract audio</span>
+        </div>
+        <div class="step pending" id="step-transcribe">
+          <span class="step-dot"></span>
+          <span class="step-label">Transcribe speech</span>
+        </div>
+        <div class="step pending" id="step-summarize">
+          <span class="step-dot"></span>
+          <span class="step-label">Generate summary</span>
+        </div>
+        <div class="step pending" id="step-quiz">
+          <span class="step-dot"></span>
+          <span class="step-label">Generate quiz</span>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-msg" id="progressMsg">Initializing…</div>
+    </section>
+
+    <!-- Results card (hidden until done) -->
+    <section class="card results-card hidden" id="resultsCard">
+
+      <div class="results-tabs">
+        <button class="rtab active" id="rtabSummary" onclick="showResult('summary')">Summary</button>
+        <button class="rtab" id="rtabQuiz" onclick="showResult('quiz')">Quiz</button>
+      </div>
+
+      <div class="result-pane" id="paneSummary"></div>
+      <div class="result-pane hidden" id="paneQuiz"></div>
+
+      <div class="results-footer">
+        <button class="action-btn" onclick="copyResult()">⎘ Copy</button>
+        <button class="action-btn" onclick="resetApp()">↺ New Video</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
