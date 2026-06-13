@@ -7,3 +7,4 @@ __pycache__/
 uploads/
 *.zip
 
+test_gemini.py
