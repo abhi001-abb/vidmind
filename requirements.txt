@@ -29,3 +29,4 @@ google-generativeai>=0.8.0,<1.0
 yt-dlp>=2024.1.1                  # keep this updated regularly — YouTube's
                                    # bot-detection changes frequently and
                                    # older yt-dlp builds break first.
+gunicorn>=23.0.0
