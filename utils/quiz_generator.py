@@ -133,14 +133,19 @@ SUMMARY:
             return None
 
         print(f"✅ Generated {len(questions)} questions")
-        return _format_quiz(questions)
+        # _try_repair_json can recover a partial set when Gemini's response
+        # gets truncated (e.g. hitting max_output_tokens). Previously that
+        # was silent — the frontend just rendered however many questions
+        # came back with no indication anything was short. Now we say so.
+        short_by = num_questions - len(questions)
+        return _format_quiz(questions, short_by=short_by)
 
     except Exception as e:
         print(f"❌ Gemini API error: {e}")
         return None
 
 
-def _format_quiz(questions):
+def _format_quiz(questions, short_by: int = 0):
     lines = []
     for i, q in enumerate(questions, 1):
         lines.append(f"Q{i}: {q.get('question', '')}")
@@ -151,4 +156,9 @@ def _format_quiz(questions):
             f" — {q.get('explanation', '')}"
         )
         lines.append("")
+    if short_by > 0:
+        lines.append(
+            f"(Note: {short_by} question{'s' if short_by != 1 else ''} could not be "
+            f"generated and {'were' if short_by != 1 else 'was'} skipped.)"
+        )
     return "\n".join(lines).strip()

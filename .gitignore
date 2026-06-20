@@ -8,3 +8,4 @@ uploads/
 *.zip
 
 test_gemini.py
+jobs.db
